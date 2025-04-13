@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GraphDatabaseSupport.DataSourcesState">
+    <option name="containerV1">
+      <DataSourceContainerV1>
+        <option name="dataSources">
+          <list>
+            <DataSourceV1>
+              <option name="uuid" value="9b8267da-6c0e-485d-ac31-1008659d3854" />
+              <option name="name" value="growforever" />
+              <option name="dataSourceType" value="NEO4J_BOLT" />
+              <option name="configuration">
+                <map>
+                  <entry key="authType" value="User &amp; Password" />
+                  <entry key="database" value="neo4j" />
+                  <entry key="host" value="localhost" />
+                  <entry key="password" value="growforever" />
+                  <entry key="port" value="7687" />
+                  <entry key="protocol" value="bolt" />
+                  <entry key="user" value="neo4j" />
+                </map>
+              </option>
+            </DataSourceV1>
+          </list>
+        </option>
+      </DataSourceContainerV1>
+    </option>
+  </component>
+</project>
