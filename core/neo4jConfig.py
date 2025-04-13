@@ -1,9 +1,9 @@
-from neo4j import GraphDatabase
+import neo4j
 from .config import settings
 
 class Neo4jSession:
     def __init__(self):
-        self._driver = GraphDatabase.driver(
+        self._driver = neo4j.GraphDatabase.driver(
             settings.NEO4J_URI,
             auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD)
         )

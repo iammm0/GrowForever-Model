@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+import sqlalchemy
+
 from .config import settings
 
 DATABASE_URL = (
@@ -10,13 +10,13 @@ DATABASE_URL = (
     f"{settings.POSTGRES_DB}"
 )
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = sqlalchemy.create_engine(DATABASE_URL, pool_pre_ping=True)
 
 # 创建Session工厂
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base类供数据模型继承
-Base = declarative_base()
+Base = sqlalchemy.orm.declarative_base()
 
 # Dependency，用于FastAPI依赖注入
 def get_db():
