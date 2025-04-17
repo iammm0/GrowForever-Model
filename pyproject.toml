@@ -41,8 +41,3 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-pydantic-settings>=2.8.1
-SQLAlchemy>=2.0.40
-neo4j>=5.28.1
-fastapi>=0.115.12
-pydantic>=2.11.3

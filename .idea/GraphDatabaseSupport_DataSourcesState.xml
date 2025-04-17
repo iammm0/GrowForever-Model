@@ -14,7 +14,7 @@
                   <entry key="authType" value="User &amp; Password" />
                   <entry key="database" value="neo4j" />
                   <entry key="host" value="localhost" />
-                  <entry key="password" value="growforever" />
+                  <entry key="password" value="growfrever" />
                   <entry key="port" value="7687" />
                   <entry key="protocol" value="bolt" />
                   <entry key="user" value="neo4j" />
