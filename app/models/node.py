@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, JSON, func
-from core.database import Base
+from app.core.database import Base
 import enum
 
 class NodeType(enum.Enum):

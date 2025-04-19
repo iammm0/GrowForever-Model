@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: growforever-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: growforever-model
+  template:
+    metadata:
+      labels:
+        app: growforever-model
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: growforever-model-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: growforever-model-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: growforever-model-secrets
+                  key: POSTGRES_DB
+            - name: NEO4J_USER
+              valueFrom:
+                secretKeyRef:
+                  name: growforever-model-secrets
+                  key: NEO4J_USER
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: growforever-model-secrets
+                  key: NEO4J_PASSWORD
+

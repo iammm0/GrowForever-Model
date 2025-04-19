@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
-from core.database import get_db
-from models.node import Node
-from schemas.node_schema import NodeCreate, NodeResponse, NodeUpdate
+from app.core.database import get_db
+from app.models import Node
+from app.schemas.node_schema import NodeCreate, NodeResponse, NodeUpdate
 
 router = APIRouter(prefix="/nodes", tags=["Nodes"])
 

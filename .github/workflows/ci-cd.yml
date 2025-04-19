@@ -1,0 +1,40 @@
+name: CI/CD for growforever-model
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**'
+
+env:
+  IMAGE_NAME: registry.cn-shanghai.aliyuncs.com/your-org/growforever-model
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to ACR
+      uses: docker/login-action@v2
+      with:
+        registry: registry.cn-shanghai.aliyuncs.com
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t $IMAGE_NAME:${{ github.sha }} ./docker
+        docker push $IMAGE_NAME:${{ github.sha }}
+
+    - name: Setup kubeconfig
+      run: |
+        echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+        export KUBECONFIG=$PWD/kubeconfig.yaml
+
+    - name: Deploy via Helm
+      run: |
+        helm upgrade --install growforever-model ./helm/growforever-model \
+          --set image.repository=$IMAGE_NAME \
+          --set image.tag=${{ github.sha }}
