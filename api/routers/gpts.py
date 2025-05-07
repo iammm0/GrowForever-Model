@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
-from app.services.gpt_service import generate_text
-from app.services.gnn_service import parse_text_to_graph  # 假设你有 GNN 解析服务
+from services.gpt_service import generate_text
+from services.gnn_service import parse_text_to_graph  # 假设你有 GNN 解析服务
 
 router = APIRouter(prefix="/gpt", tags=["GPT"])
 

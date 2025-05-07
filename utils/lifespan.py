@@ -2,8 +2,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.core.database import Base, engine
-from app.core.neo4jConfig import neo4j_db
+from core.database import Base, engine
+from core.neo4jConfig import neo4j_db
 
 
 @asynccontextmanager
