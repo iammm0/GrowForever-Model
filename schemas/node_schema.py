@@ -1,48 +1,41 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from datetime import datetime
-from enum import Enum
-
-class NodeType(str, Enum):
-    idea = "idea"
-    memory = "memory"
-    emotion = "emotion"
-    feature = "feature"
-    event = "event"
-    user_defined = "user_defined"
+from models.enums import OriginType, NodeType
 
 class NodeContent(BaseModel):
-    media: Optional[List[str]] = Field(None, description="图片、视频、音频URL列表")
-    links: Optional[List[str]] = Field(None, description="外部链接列表")
-    rich_text: Optional[str] = Field(None, description="附带的富文本内容")
-
-class NodeMetadata(BaseModel):
-    tags: Optional[List[str]] = Field(None, description="节点标签列表")
-    emotions: Optional[List[str]] = Field(None, description="关联的情绪标签")
-    vector: Optional[List[float]] = Field(None, description="节点的特征向量，用于AI模型分析")
-    extra: Optional[Dict[str, str]] = Field(None, description="用户自定义额外字段")
+    resource_links: Optional[List[str]] = Field(None, description="外部资源链接列表")
+    media: Optional[List[str]] = Field(None, description="媒体文件 URL 列表")
 
 class NodeBase(BaseModel):
-    title: str = Field(..., max_length=255, description="节点标题")
-    description: Optional[str] = Field(None, max_length=1000, description="节点详细描述")
-    type: NodeType = Field(default=NodeType.idea, description="节点类型")
-    content: Optional[NodeContent] = Field(None, description="节点内容")
-    node_metadata: Optional[NodeMetadata] = Field(None, description="节点扩展元数据")
+    title: str = Field(..., max_length=255, description="节点标题（必填）")
+    description: str = Field(..., description="节点描述（必填）")
+    is_seed: Optional[bool] = Field(False, description="是否为种子节点")
+    expansion_depth: Optional[int] = Field(0, description="扩展层数")
+    origin: Optional[OriginType] = Field(OriginType.MANUAL, description="节点来源")
+    type: Optional[NodeType] = Field(NodeType.IDEA, description="节点类型")
+    content: Optional[NodeContent] = None
+    tags: Optional[List[str]] = None
+    metadata: Optional[Dict[str, any]] = None
 
 class NodeCreate(NodeBase):
-    pass  # 创建节点所需字段与基础字段相同
+    pass
 
 class NodeUpdate(BaseModel):
     title: Optional[str] = Field(None, max_length=255)
-    description: Optional[str] = Field(None, max_length=1000)
+    description: Optional[str] = None
+    is_seed: Optional[bool] = None
+    expansion_depth: Optional[int] = None
+    origin: Optional[OriginType] = None
     type: Optional[NodeType] = None
     content: Optional[NodeContent] = None
-    node_metadata: Optional[NodeMetadata] = None
+    tags: Optional[List[str]] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 class NodeResponse(NodeBase):
     id: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True  # SQLAlchemy兼容模式（Pydantic v2新推荐）
+        from_attributes = True

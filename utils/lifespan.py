@@ -1,15 +1,16 @@
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
-
 from core.database import Base, engine
 from core.neo4jConfig import neo4j_db
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 🚀 启动阶段
-    print("📦 创建 PostgreSQL 表结构中...")
+    print("🗑️ 删除旧的 PostgreSQL 表结构中...")
+    Base.metadata.drop_all(bind=engine)
+    print("✅ 已删除 PostgreSQL 表")
+
+    print("📦 正在重新创建 PostgreSQL 表结构中...")
     Base.metadata.create_all(bind=engine)
     print("✅ PostgreSQL 表已就绪")
 

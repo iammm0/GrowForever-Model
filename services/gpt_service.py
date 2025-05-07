@@ -1,18 +1,42 @@
-from transformers import pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
+import os
 
-# 初始化文本生成流水线，可以调整模型名称与生成参数
-gpt_generator = pipeline("text-generation", model="gpt2")
+# 1. 加载预训练模型与分词器（可换成中文模型或自己微调后的模型）
+MODEL_NAME = os.getenv("GPT_MODEL_NAME", "gpt2")
+CACHE_DIR = os.getenv("HF_CACHE_DIR", None)
 
-def generate_text(prompt: str, max_length: int = 200) -> str:
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=CACHE_DIR)
+model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=CACHE_DIR)
+
+# 2. 生成配置（可根据需要调整）
+gen_config = GenerationConfig(
+    max_new_tokens=200,
+    temperature=0.8,
+    top_p=0.9,
+    do_sample=True,
+    num_return_sequences=1,
+)
+
+def generate_expansion_text(title: str, 
+                            description: str,
+                            depth: int = 0) -> str:
     """
-    根据输入提示生成扩展文本。
-
-    Args:
-        prompt (str): 用户输入的提示文本
-        max_length (int, optional): 生成文本的最长长度，默认为200
-
-    Returns:
-        str: 生成的扩展文本
+    根据节点 title 与 description 生成扩展的长文本。
+    depth 可用于在 prompt 中控制生成的层级或风格。
     """
-    outputs = gpt_generator(prompt, max_length=max_length, num_return_sequences=1)
-    return outputs[0]['generated_text']
+    prompt = (
+        f"【Node Title】: {title}\n"
+        f"【Node Description】: {description}\n"
+        f"【Expansion Depth】: {depth}\n\n"
+        "请基于以上信息，为该节点生成若干后续想法的详细描述，"
+        "用中文分段或英文句子描述均可："
+    )
+    inputs = tokenizer(prompt, return_tensors="pt")
+    outputs = model.generate(
+        **inputs, 
+        generation_config=gen_config,
+        pad_token_id=tokenizer.eos_token_id
+    )
+    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # 去掉 prompt 本身，只保留模型生成部分
+    return text[len(prompt):].strip()
