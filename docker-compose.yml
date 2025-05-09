@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: growforever-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: iammm
+      POSTGRES_DB: growforever
+    ports:
+      - "5433:5432"
+    volumes:
+      - growforever_pg_data:/var/lib/postgresql/data
+
+  neo4j:
+    image: neo4j:5
+    container_name: growforever-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/growforever
+    ports:
+      - "7474:7474"   # Neo4j HTTP Web UI
+      - "7687:7687"   # Bolt protocol
+    volumes:
+      - growforever_neo4j_data:/data
+      - growforever_neo4j_logs:/logs
+
+volumes:
+  growforever_pg_data:
+  growforever_neo4j_data:
+  growforever_neo4j_logs:
